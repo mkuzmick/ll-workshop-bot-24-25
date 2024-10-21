@@ -1,81 +1,3 @@
-// const llog = require('learninglab-log')
-// const bots = require('../bots');
-// const OpenAI = require('openai');
-
-// async function getLast30Messages({client, channel}) {
-//     try {
-//       const result = await client.conversations.history({
-//         channel: channel,
-//         limit: 30, // Get the last 30 messages
-//       });
-  
-//       const messages = result.messages;
-  
-//       // Display messages
-//       messages.forEach((msg, index) => {
-//         console.log(`${index + 1}: ${msg.text} (Timestamp: ${msg.ts})`);
-//       });
-//       return messages
-//     } catch (error) {
-//       console.error('Error fetching messages:', error);
-//     }
-//   }
-  
-
-
-
-
-// exports.testing = async ({ message, say }) => {
-//     // say() sends a message to the channel where the event was triggered
-//     await say(`the bot is running, <@${message.user}>!`);
-// }
-
-// exports.parseAll = async ({ client, message, say, event }) => {
-//     const openai = new OpenAI({
-//         apiKey: process.env.OPENAI_API_KEY,
-//       });
-
-//     llog.magenta("logging all messages")
-//     llog.yellow(message)
-
-//     if (message.files) {
-//       llog.blue("message has files")
-//       llog.yellow(message)
-
-//         return
-//     }
-
-
-//     const messages = await getLast30Messages({client: client, channel: message.channel});
-//     const messageText = messages.map(msg => ({
-//         text: msg.text,
-//         username: msg.username || msg.user // Use username if exists, otherwise use user
-//     }));
-
-//     const response = await openai.chat.completions.create({
-//         model: "gpt-4",
-//         messages: [
-//             { role: "system", content: "You are a historian of Social Responsibilites of Higher Education." },
-//             { role: "user", content: `you are about to add to this discussion of interviews and podcasts as a form for communicating ideas around the connections between social issues and the role of higher education as it relates to those issues: ${JSON.stringify(messageText)}. Please reply with what a society and higher education historian adding to this discussion would say, and do it in text alone, not in JSON. Give special attention to the new message, which is: ${message.text}` }
-//         ],
-//         max_tokens: 1000,
-//     });
-
-//     const responseText = response.choices[0].message.content.trim();
-
-//     await client.chat.postMessage({
-//         channel: message.channel,
-//         text: responseText,
-//         thread_ts: message.thread_ts ? message.thread_ts : message.ts,
-//         username: "Society and Higher Ed Historian",
-//         // icon_url: ""
-//       });
-
-// }
-
-
-
-
 const llog = require('learninglab-log');
 const bots = require('../bots');
 const OpenAI = require('openai');
@@ -173,7 +95,7 @@ exports.parseAll = async ({ client, message, say, event }) => {
                           {
                             role: "user",
                             content: [
-                              { type: "text", text: "This is the image from a film about a music professor, please imagine a good title for this film and write a Netflix promo for the film---just return the title in bold and then the description" },
+                              { type: "text", text: "This is an image from a film, please imagine a good title for this film and write a Netflix promo for the film---just return the title in bold and then the description" },
                               {
                                 type: "image_url",
                                 image_url: {
