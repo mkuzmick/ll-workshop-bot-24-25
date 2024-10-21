@@ -55,8 +55,8 @@
 //     const response = await openai.chat.completions.create({
 //         model: "gpt-4",
 //         messages: [
-//             { role: "system", content: "You are a historian of Japanese Cinema." },
-//             { role: "user", content: `you are about to add to this discussion of quotations from Benshi narrators, descriptions of film stills and analysis from Film critics and historians: ${JSON.stringify(messageText)}. Please reply with what a film historian adding to this discussion would say, and do it in text alone, not in JSON. Give special attention to the new message, which is: ${message.text}` }
+//             { role: "system", content: "You are a historian of Social Responsibilites of Higher Education." },
+//             { role: "user", content: `you are about to add to this discussion of interviews and podcasts as a form for communicating ideas around the connections between social issues and the role of higher education as it relates to those issues: ${JSON.stringify(messageText)}. Please reply with what a society and higher education historian adding to this discussion would say, and do it in text alone, not in JSON. Give special attention to the new message, which is: ${message.text}` }
 //         ],
 //         max_tokens: 1000,
 //     });
@@ -67,7 +67,7 @@
 //         channel: message.channel,
 //         text: responseText,
 //         thread_ts: message.thread_ts ? message.thread_ts : message.ts,
-//         username: "Japanese Film Historian",
+//         username: "Society and Higher Ed Historian",
 //         // icon_url: ""
 //       });
 
@@ -106,6 +106,16 @@ async function downloadSlackImage(fileUrl, fileName, token) {
 async function encodeImage(imagePath) {
     const imageBuffer = await fs.readFile(imagePath);
     return imageBuffer.toString('base64');
+}
+
+// Helper function to remove image after processing
+async function removeImage(imagePath) {
+    try {
+        await fs.unlink(imagePath); // Remove the file
+        llog.green(`Image removed successfully: ${imagePath}`);
+    } catch (error) {
+        llog.red(`Failed to remove image: ${error}`);
+    }
 }
 
 async function getLast30Messages({ client, channel }) {
@@ -163,7 +173,7 @@ exports.parseAll = async ({ client, message, say, event }) => {
                           {
                             role: "user",
                             content: [
-                              { type: "text", text: "This is the image from a film, please imagine a good title for this film and write a Netflix promo for the film---just return the title in bold and then the description" },
+                              { type: "text", text: "This is the image from a film about a music professor, please imagine a good title for this film and write a Netflix promo for the film---just return the title in bold and then the description" },
                               {
                                 type: "image_url",
                                 image_url: {
@@ -189,7 +199,7 @@ exports.parseAll = async ({ client, message, say, event }) => {
                         thread_ts: message.thread_ts ? message.thread_ts : message.ts,
                         username: "Netflix Promo",
                     });
-
+                    await removeImage(filePath)
                     return; // Exit after processing the image
                 }
             }
@@ -206,8 +216,8 @@ exports.parseAll = async ({ client, message, say, event }) => {
     const response = await openai.chat.completions.create({
         model: "gpt-4",
         messages: [
-            { role: "system", content: "You are a historian of Japanese Cinema." },
-            { role: "user", content: `you are about to add to this discussion of quotations from Benshi narrators, descriptions of film stills and analysis from Film critics and historians: ${JSON.stringify(messageText)}. Please reply with what a film historian adding to this discussion would say, and do it in text alone, not in JSON. Give special attention to the new message, which is: ${message.text}` }
+            { role: "system", content: "You are a historian of Social Responsibilites of Higher Education." },
+            { role: "user", content: `you are about to add to this discussion of interviews and podcasts as a form for communicating ideas around the connections between social issues and the role of higher education as it relates to those issues: ${JSON.stringify(messageText)}. Please reply with what a society and higher education historian adding to this discussion would say, and do it in text alone, not in JSON. Give special attention to the new message, which is: ${message.text}` }
         ],
         max_tokens: 1000,
     });
@@ -218,6 +228,6 @@ exports.parseAll = async ({ client, message, say, event }) => {
         channel: message.channel,
         text: responseText,
         thread_ts: message.thread_ts ? message.thread_ts : message.ts,
-        username: "Japanese Film Historian",
+        username: "Society and Higher Ed Historian",
     });
 }
