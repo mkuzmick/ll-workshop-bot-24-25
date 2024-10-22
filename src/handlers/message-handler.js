@@ -15,7 +15,7 @@ async function downloadSlackImage(fileUrl, fileName, token) {
             responseType: 'arraybuffer', // Download the file as a binary buffer
         });
 
-        const filePath = path.join(global.ROOT_DIR, "_assets", fileName); // Save the file locally
+        const filePath = path.join(global.ROOT_DIR, "_temp", fileName); // Save the file locally
         await fs.writeFile(filePath, response.data);
         llog.green(`Image downloaded successfully: ${filePath}`);
         return filePath;
@@ -95,9 +95,9 @@ exports.parseAll = async ({ client, message, say, event }) => {
                           {
                             role: "user",
                             content: [
-                              { type: "text", text: "This is an image from a film, please imagine a good title for this film and write a Netflix promo for the film---just return the title in bold and then the description" },
+                              { type: "text", text: "This is an image of a storyboard from a film or else a scene from the film. If there are index cards with notes, you have the storyboard. Please imagine a good title for this film and write a Netflix promo for the film---just return the title in bold and then the description" },
                               {
-                                type: "image_url",
+                                type: "image_url", 
                                 image_url: {
                                   "url": `data:image/jpeg;base64,${base64Image}`,
                                 },
