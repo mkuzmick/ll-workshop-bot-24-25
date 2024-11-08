@@ -138,8 +138,10 @@ exports.parseAll = async ({ client, message, say, event }) => {
     const response = await openai.chat.completions.create({
         model: "gpt-4",
         messages: [
-            { role: "system", content: "You are a historian of Social Responsibilites of Higher Education." },
-            { role: "user", content: `you are about to add to this discussion of interviews and podcasts as a form for communicating ideas around the connections between social issues and the role of higher education as it relates to those issues: ${JSON.stringify(messageText)}. Please reply with what a society and higher education historian adding to this discussion would say, and do it in text alone, not in JSON. Give special attention to the new message, which is: ${message.text}` }
+            { role: "system", content: "You are a dramaturge ." },
+            { role: "user", content: `You are a dramaturge assisting in the production of a play about the lives of students at an Ivy League college. Your role is to provide rich, research-based insights into the academic and social dynamics of such a setting to ensure that the portrayal is authentic and nuanced. Begin by researching the cultural characteristics of Ivy League institutions, such as academic rigor, campus traditions, and social structures. Look into issues that are relevant to contemporary students, such as mental health, academic pressure, privilege, and diversity, and gather anecdotes or common challenges students face in such an environment.
+
+As you prepare materials for the creative team, suggest ways to incorporate authentic details into character dialogue, relationships, and motivations. Consider how status, reputation, and family expectations might influence each character’s behavior. Offer guidance on specific set and costume elements to reflect the unique architectural styles, symbols, and student rituals of Ivy League campuses. Create a glossary of common terms, phrases, and campus-specific jargon, and recommend resources that help bring the world of the play to life for both actors and audiences.: ${JSON.stringify(messageText)}. Please reply with what you would say to the creative team, giving special attention to the new message, which is ${message.text}` }
         ],
         max_tokens: 1000,
     });
@@ -150,6 +152,26 @@ exports.parseAll = async ({ client, message, say, event }) => {
         channel: message.channel,
         text: responseText,
         thread_ts: message.thread_ts ? message.thread_ts : message.ts,
-        username: "Society and Higher Ed Historian",
+        username: "Dramaturge",
+    });
+
+    const scriptWriterResponse = await openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+            { role: "system", content: "You are a playwright working from materials provided to you by a dramaturge along with dialogue between students and bots." },
+            { role: "user", content: `You are a playwright tasked with rewriting a scene for a play set at an Ivy League college, using both the insights provided by the dramaturge (${responseText}) and the existing dialogue or narrative structure (${JSON.stringify(messageText)}).
+
+Review the following stream of Slack messages carefully to understand the characters, their dynamics, and the key themes that need to be enhanced. Then, using ${responseText} as a guide, rewrite the scene to deepen the portrayal of Ivy League student life, reflecting themes such as academic pressure, privilege, and identity struggles. Make sure the dialogue is authentic to an Ivy League setting, incorporating specific campus jargon, references to traditions, and other sensory details that reveal the unique culture and atmosphere of an elite college.
+
+As you rewrite, pay attention to moments where character actions or dialogue can reveal economic or social differences subtly, aligning with the dramaturge’s recommendations. Aim to bring out layers of ambition, vulnerability, and self-doubt in a way that feels true to each character and their background. Your goal is to create a scene that feels grounded in both the dramaturgical research and the existing story arc from ${JSON.stringify(messageText)}. Be sure to make the most recent message central to the narrative: ${message.text}` }
+        ],
+        max_tokens: 1000,
+    });
+
+    await client.chat.postMessage({
+        channel: message.channel,
+        text: scriptWriterResponse.choices[0].message.content.trim(),
+        thread_ts: message.thread_ts ? message.thread_ts : message.ts,
+        username: "Playwright",
     });
 }
