@@ -14,17 +14,17 @@ exports.parseAll = async ({ client, message, say, event }) => {
     llog.gray(message);
 
     // Check if the message is a bot message
-    if (isBotMessage(message)) {
-        llog.yellow("Skipped: Bot message detected");
-        return;
-    }
-
-    // Check if the message is in a subthread
-    // if (isInSubthread(message)) {
-    //     llog.magenta("Message is in a subthread");
-    //     // Add specific logic for subthread messages here if needed
+    // if (isBotMessage(message)) {
+    //     llog.yellow("Skipped: Bot message detected");
     //     return;
     // }
+
+    // Check if the message is in a subthread
+    if (isInSubthread(message)) {
+        llog.magenta("Message is in a subthread");
+        // Add specific logic for subthread messages here if needed
+        return;
+    }
 
     // Process the message if it has text
     if (message.text) {
